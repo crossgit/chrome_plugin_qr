@@ -1,0 +1,42 @@
+{
+    "manifest_version": 2,
+    "name": "时钟与二维码",
+    "version": "0.1.0",
+    "description": "扩展时钟",
+    "background": {
+        "scripts": [
+            "js/jquery.min.js",
+            "js/jquery.qrcode.min.js",
+            "js/right.js"
+        ]
+    },
+    "icons": {
+        "16": "images/icon16.png",
+        "48": "images/icon48.png",
+        "128": "images/icon128.png"
+    },
+    "browser_action": {
+        "default_icon": {
+            "19": "images/icon19.png",
+            "38": "images/icon38.png"
+        },
+        "default_title": "我的时钟",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*/*"
+            ],
+            "js": [ 
+                "js/content.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "tabs",
+        "activeTab",
+        "contextMenus",
+        "notifications"
+    ]
+}
