@@ -21,3 +21,13 @@ chrome.tabs.getSelected(null, function (tab) {
     });
 });
 
+
+$(".btnTrans").click(function () {
+    var txt = $(".txt").val();
+    $("#qrcode").qrcode({
+        render: "canvas",
+        width: 180,
+        height: 180,
+        text: txt
+    });
+})
