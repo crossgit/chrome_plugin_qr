@@ -17,7 +17,7 @@ chrome.tabs.getSelected(null, function (tab) {
         render: "canvas",
         width: 180,
         height: 180,
-        text: tab.url
+        text: tab.url.replace("localhost","192.168.1.100")
     });
 });
 
