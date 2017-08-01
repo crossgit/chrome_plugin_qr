@@ -13,10 +13,4 @@
 * 选择内容后,右键功能还没做.
 
 
-> 使用技巧
-
-* 开发环境http://localhost/xxx改成内网IP
-
-打开 js/myclock.js,修改20行的IP地址
-
-    text: tab.url.replace("localhost","192.168.1.100")
+> 可以自动获取内网IP,替换掉localhost
