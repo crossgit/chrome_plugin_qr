@@ -21,11 +21,17 @@ chrome.tabs.getSelected(null, function (tab) {
             width: 180,
             height: 180,
             text: tab.url.replace("localhost", ip)
-        });
+        }).append(' <input type="button" class="btnGetImg" value="下载二维码">');
+
+
     });
 
 });
 
+$(document).on('click', '.btnGetImg', function () {
+    var dom = $('#qrcode').find('canvas')[0];
+    download('qrcode.png', dom, 'png');
+})
 
 $(".btnTrans").click(function () {
     var txt = $(".txt").val();
@@ -77,4 +83,44 @@ function getUserIP(onNewIP) { //  onNewIp - your listener function for new IPs
         if (!ice || !ice.candidate || !ice.candidate.candidate || !ice.candidate.candidate.match(ipRegex)) return;
         ice.candidate.candidate.match(ipRegex).forEach(iterateIP);
     };
+}
+
+// 转成图片
+function convertCanvasToImage(canvas) {
+    var image = new Image();
+    image.src = canvas.toDataURL("image/png");
+    return image;
+}
+
+// 复制图片
+function copyImg(dom) {
+    var range = document.createRange();
+    console.log(range);
+    range.selectNode(dom);
+    window.getSelection().addRange(range);
+    document.execCommand("Copy", "false", null);
+}
+
+// 下载图片
+function download(name, canvas, type) {
+    //设置保存图片的类型
+    var imgdata = canvas.toDataURL(type);
+    //将mime-type改为image/octet-stream,强制让浏览器下载
+    var fixtype = function (type) {
+        type = type.toLocaleLowerCase().replace(/jpg/i, 'jpeg');
+        var r = type.match(/png|jpeg|bmp|gif/)[0];
+        return 'image/' + r;
+    }
+    imgdata = imgdata.replace(fixtype(type), 'image/octet-stream')
+    //将图片保存到本地
+    var saveFile = function (data, filename) {
+        var link = document.createElement('a');
+        link.href = data;
+        link.download = filename;
+        var event = document.createEvent('MouseEvents');
+        event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        link.dispatchEvent(event);
+    }
+    // var filename = new Date().toLocaleDateString() + '.' + type;
+    saveFile(imgdata, name);
 }
