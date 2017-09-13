@@ -11,30 +11,34 @@ function my_clock(el) {
 var clock_div = document.getElementById('clock_div');
 my_clock(clock_div);
 
+$("#category").html(getStore());
+// document.getElementsByClassName('txt')[0].value = window.localStorage.txt;
+
+
 // 二维码显示
 chrome.tabs.getSelected(null, function (tab) {
     // 获取IP
     getUserIP(function (ip) {
         // document.getElementById("ip").innerHTML = 'Got your IP ! : ' + ip + " | verify in http://www.whatismypublicip.com/";
+        // ' <input type="button" class="btnGetImg" value="下载二维码">'
         $("#qrcode").qrcode({
             render: "canvas",
             width: 180,
             height: 180,
             text: tab.url.replace("localhost", ip)
-        }).append(' <input type="button" class="btnGetImg" value="下载二维码">');
-
-
+        }).append('<p style="font-size:12px;">点击二维码下载图片.</p>');
     });
-
 });
 
-$(document).on('click', '.btnGetImg', function () {
-    var dom = $('#qrcode').find('canvas')[0];
-    download('qrcode.png', dom, 'png');
+$(document).on('click', 'canvas', function () {
+    download('qrcode.png', this, 'png');
 })
 
+// 点击生成二维码
 $(".btnTrans").click(function () {
     var txt = $(".txt").val();
+    if ($.trim(txt) == '') return;
+    setStore(txt);
     $("#qrcode").qrcode({
         render: "canvas",
         width: 180,
@@ -43,10 +47,52 @@ $(".btnTrans").click(function () {
     });
 })
 
+$('.btnClear').click(function () {
+    window.localStorage.clear();
+})
+
+// 设置
+function getStore() {
+    if (!window.localStorage.cache) {
+        return;
+    }
+    var _cache = window.localStorage.cache;
+    var array = _cache.split(',');
+    var str = '';
+    for (var i = 0; i < array.length; i++) {
+        str += ' <option value="' + array[i] + '">' + array[i] + '</option>'
+    }
+    return str;
+}
+
+function setStore(value) {
+    if (window.localStorage.cache) {
+        var _cache = window.localStorage.cache;
+        // 最多10个,检查是否已经存在,存在不处理
+        var array = _cache.split(',');
+        var b = false;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i] == value) {
+                b = true;
+                return;
+            }
+        }
+        if (!b) {
+            // 50个缓存
+            array.unshift(value);
+            if (array.length > 50) array.slice(0, 50);
+            window.localStorage.cache = array.join(',');
+        }
+    }
+    else {
+        window.localStorage.cache = value;
+    }
+
+}
 
 /**
  * Get the user IP throught the webkitRTCPeerConnection
- * @param onNewIP {Function} listener function to expose the IP locally
+ * @param onNewIP {Function} listener function to expose the IP locally  获取内网IP
  * @return undefined
  */
 function getUserIP(onNewIP) { //  onNewIp - your listener function for new IPs

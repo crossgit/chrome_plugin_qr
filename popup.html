@@ -29,7 +29,7 @@
             margin: 10px 5px;
         }
 
-        .btnTrans {
+        .btn {
             width: 100%;
             background-color: #f2f2f2;
             height: 26px;
@@ -39,7 +39,7 @@
             text-align: center;
         }
 
-        #clock_div{
+        #clock_div {
             margin-top: 10px;
             margin-bottom: 20px;
         }
@@ -56,7 +56,13 @@
 
 
 
-    <input type="text" class="txt"><input type="button" class="btnTrans" value="生成二维码">
+    <input type="text" class="txt" aria-describedby="basic-addon1" list="category">
+    <datalist id="category">
+        
+    </datalist>
+    <input type="button" class="btn btnTrans" value="生成二维码">
+    <br>
+    <input type="button" class="btnClear" style="float:right;" value="清除历史记录">
     <script src="js/myclock.js"></script>
 </body>
 
