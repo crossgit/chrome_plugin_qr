@@ -1,22 +1,14 @@
-function my_clock(el) {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var s = today.getSeconds(); m = m >= 10 ? m : ('0' + m);
-    s = s >= 10 ? s : ('0' + s);
-    el.innerHTML = h + ":" + m + ":" + s; setTimeout(function () { my_clock(el) }, 1000);
-}
-
+ 
+// ----------------
 // 时间提示
 var clock_div = document.getElementById('clock_div');
 my_clock(clock_div);
-
+// 加载缓存信息
 $("#category").html(getStore());
-// document.getElementsByClassName('txt')[0].value = window.localStorage.txt;
-
 
 // 二维码显示
 chrome.tabs.getSelected(null, function (tab) {
+
     // 获取IP
     getUserIP(function (ip) {
         // document.getElementById("ip").innerHTML = 'Got your IP ! : ' + ip + " | verify in http://www.whatismypublicip.com/";
@@ -25,7 +17,7 @@ chrome.tabs.getSelected(null, function (tab) {
             render: "canvas",
             width: 180,
             height: 180,
-            text: tab.url.replace("localhost", ip)
+            text: tab.url.replace("localhost", ip).replace("127.0.0.1", ip)
         }).append('<p style="font-size:12px;">点击二维码下载图片.</p>');
     });
 });
@@ -46,7 +38,7 @@ $(".btnTrans").click(function () {
         text: txt
     });
 })
-
+// 清楚缓存
 $('.btnClear').click(function () {
     window.localStorage.clear();
 })
@@ -88,6 +80,15 @@ function setStore(value) {
         window.localStorage.cache = value;
     }
 
+}
+// 当前时间
+function my_clock(el) {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds(); m = m >= 10 ? m : ('0' + m);
+    s = s >= 10 ? s : ('0' + s);
+    el.innerHTML = h + ":" + m + ":" + s; setTimeout(function () { my_clock(el) }, 1000);
 }
 
 /**
