@@ -1,4 +1,4 @@
- 
+
 // ----------------
 // 时间提示
 var clock_div = document.getElementById('clock_div');
@@ -19,7 +19,10 @@ chrome.tabs.getSelected(null, function (tab) {
             height: 180,
             text: tab.url.replace("localhost", ip).replace("127.0.0.1", ip)
         }).append('<p style="font-size:12px;">点击二维码下载图片.</p>');
+
+        $("#my_ip").html('ip: ' + ip);
     });
+
 });
 
 $(document).on('click', 'canvas', function () {
