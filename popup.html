@@ -18,7 +18,6 @@
         }
 
         div {
-            line-height: 50px;
             font-size: 42px;
             text-align: center;
         }
@@ -39,21 +38,22 @@
             text-align: center;
         }
 
-        #clock_div {
+        #clock_div,
+        #my_ip {
             margin-top: 10px;
             margin-bottom: 20px;
         }
     </style>
 
     <script src="js/jquery.min.js"></script>
-    <script src="js/jquery.qrcode.min.js"></script>  
+    <script src="js/jquery.qrcode.min.js"></script>
 </head>
 
 <body>
     <!-- <input type="button" class="exportJPG" value="将网页导出jpg">
     <input type="button" class="exportPDF" id="theButton" value="将网页导出pdf"> -->
     <div id="clock_div"></div>
-
+    <div id="my_ip" style="font-size:18px;"></div>
     <div id="qrcode"></div>
 
 
