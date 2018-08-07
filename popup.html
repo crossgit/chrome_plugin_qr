@@ -18,7 +18,6 @@
         }
 
         div {
-            font-size: 42px;
             text-align: center;
         }
 
@@ -40,8 +39,18 @@
 
         #clock_div,
         #my_ip {
+            font-size: 42px;
             margin-top: 10px;
             margin-bottom: 20px;
+        }
+
+        #calendar {
+            font-size: 20px;
+        }
+
+        #calendar #lunar,
+        #calendar #week {
+            font-size: 16px;
         }
     </style>
 
@@ -52,6 +61,15 @@
 <body>
     <!-- <input type="button" class="exportJPG" value="将网页导出jpg">
     <input type="button" class="exportPDF" id="theButton" value="将网页导出pdf"> -->
+    <div id="calendar">
+        <p>
+            <span id="gregorian"></span>
+            <button id="btn-history">历史记录</button>
+        </p>
+
+        <p id="lunar"></p>
+        <p id="week"></p>
+    </div>
     <div id="clock_div"></div>
     <div id="my_ip" style="font-size:18px;"></div>
     <div id="qrcode"></div>
@@ -66,6 +84,7 @@
     <br>
     <input type="button" class="btnClear" style="float:right;" value="清除历史记录">
     <script src="js/myclock.js"></script>
+    <script src="js/navCal.js"></script>
 </body>
 
 </html>

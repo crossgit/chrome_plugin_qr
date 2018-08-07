@@ -18,6 +18,7 @@ chrome.tabs.getSelected(null, function (tab) {
             width: 180,
             height: 180,
             text: tab.url.replace("localhost", ip).replace("127.0.0.1", ip)
+            text: toUtf8(tab.url.replace("localhost", ip).replace("127.0.0.1", ip))
         }).append('<p style="font-size:12px;">点击二维码下载图片.</p>');
 
         $("#my_ip").html('ip: ' + ip);
@@ -89,9 +90,13 @@ function my_clock(el) {
     var today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
-    var s = today.getSeconds(); m = m >= 10 ? m : ('0' + m);
+    var s = today.getSeconds();
+    m = m >= 10 ? m : ('0' + m);
     s = s >= 10 ? s : ('0' + s);
-    el.innerHTML = h + ":" + m + ":" + s; setTimeout(function () { my_clock(el) }, 1000);
+    el.innerHTML = h + ":" + m + ":" + s;
+    setTimeout(function () {
+        my_clock(el)
+    }, 1000);
 }
 
 /**
@@ -173,4 +178,25 @@ function download(name, canvas, type) {
     }
     // var filename = new Date().toLocaleDateString() + '.' + type;
     saveFile(imgdata, name);
+}
+
+// 二维码使用,charCodeAt() 输出转成utf8
+function toUtf8(str) {
+    var out, i, len, c;
+    out = "";
+    len = str.length;
+    for (i = 0; i < len; i++) {
+        c = str.charCodeAt(i);
+        if ((c >= 0x0001) && (c <= 0x007F)) {
+            out += str.charAt(i);
+        } else if (c > 0x07FF) {
+            out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+            out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
+            out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+        } else {
+            out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
+            out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
+        }
+    }
+    return out;
 }
