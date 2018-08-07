@@ -17,7 +17,6 @@ chrome.tabs.getSelected(null, function (tab) {
             render: "canvas",
             width: 180,
             height: 180,
-            text: tab.url.replace("localhost", ip).replace("127.0.0.1", ip)
             text: toUtf8(tab.url.replace("localhost", ip).replace("127.0.0.1", ip))
         }).append('<p style="font-size:12px;">点击二维码下载图片.</p>');
 
@@ -39,12 +38,13 @@ $(".btnTrans").click(function () {
         render: "canvas",
         width: 180,
         height: 180,
-        text: txt
+        text: toUtf8(txt)
     });
 })
 // 清楚缓存
 $('.btnClear').click(function () {
-    window.localStorage.clear();
+    // window.localStorage.clear();
+    window.localStorage.removeItem('cache');
 })
 
 // 设置
