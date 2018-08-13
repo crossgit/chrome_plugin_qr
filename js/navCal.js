@@ -163,8 +163,8 @@ document.getElementById('btn-history').addEventListener('click', function () {
 document.body.onload = function () {
     var clock = document.querySelector('#clock');
     var cxt = clock.getContext('2d')
-    var width = clock.width = 200;
-    var height = clock.height = 200;
+    var width = clock.width = 180;
+    var height = clock.height = 180;
     var r = width / 2;
     function render() {
         // canvas.save()保存当前的画布状态到栈里，canvas.restore()取出堆栈里保存的的状态，属于先进后出，
