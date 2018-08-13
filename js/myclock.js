@@ -1,8 +1,8 @@
 
 // ----------------
 // 时间提示
-var clock_div = document.getElementById('clock_div');
-my_clock(clock_div);
+// var clock_div = document.getElementById('clock_div');
+// my_clock(clock_div);
 // 加载缓存信息
 $("#category").html(getStore());
 

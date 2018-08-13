@@ -6,12 +6,13 @@ function initArray() {
 }
 var d = new initArray("周日", "周一", "周二", "周三", "周四", "周五", "周六");
 var st = { '0_5': '小寒', '0_20': '大寒', '1_3': '立春', '1_18': '雨水', '2_5': '惊蜇', '2_20': '春分', '3_4': '清明', '3_19': '谷雨', '4_5': '立夏', '4_20': '小满', '5_5': '芒种', '5_21': '夏至', '6_6': '小暑', '6_22': '大暑', '7_7': '立秋', '7_22': '处暑', '8_7': '白露', '8_22': '秋分', '9_8': '寒露', '9_23': '霜降', '10_7': '立冬', '10_22': '小雪', '11_6': '大雪', '11_21': '冬至' };
-var _today = [today.getFullYear(), "年", today.getMonth() + 1, "月", today.getDate(), "日 "].join('');
+var _today = [today.getFullYear(), "-", today.getMonth() + 1, "-", today.getDate()].join('');
 document.getElementById('gregorian').innerHTML = _today;
 calendar = new Date();
 month = calendar.getMonth();
 date = calendar.getDate();
-document.getElementById('week').innerHTML = [d[today.getDay() + 1], st[month + '_' + date]].join(' ')
+// document.getElementById('week').innerHTML = [d[today.getDay() + 1], st[month + '_' + date]].join(' ')
+var _week = [d[today.getDay() + 1], st[month + '_' + date]].join(' ');
 
 /*农历部分*/
 var CalendarData = new Array(100);
@@ -63,13 +64,19 @@ function e2c() {
         }
     }
 }
-function GetcDateString() {
+function GetcDateStringYear() {
     var tmp = "";
     tmp += tgString.charAt((cYear - 4) % 10);
     tmp += dzString.charAt((cYear - 4) % 12);
     tmp += "(";
     tmp += sx.charAt((cYear - 4) % 12);
     tmp += ")年 ";
+
+    return tmp;
+}
+
+function GetcDateStringDate() {
+     var tmp = "";
     if (cMonth < 1) {
         tmp += "(闰)";
         tmp += monString.charAt(-cMonth - 1);
@@ -83,16 +90,29 @@ function GetcDateString() {
     }
     return tmp;
 }
-function GetLunarDay(solarYear, solarMonth, solarDay) {
+
+function GetLunarDayYear(solarYear, solarMonth, solarDay) {
     //solarYear = solarYear<1900?(1900+solarYear):solarYear;
     if (solarYear < 1921 || solarYear > 2020) {
         return "";
     } else {
         solarMonth = (parseInt(solarMonth) > 0) ? (solarMonth - 1) : 11;
         e2c(solarYear, solarMonth, solarDay);
-        return GetcDateString();
+        return GetcDateStringYear();
     }
 }
+
+function GetLunarDayDate(solarYear, solarMonth, solarDay) {
+    //solarYear = solarYear<1900?(1900+solarYear):solarYear;
+    if (solarYear < 1921 || solarYear > 2020) {
+        return "";
+    } else {
+        solarMonth = (parseInt(solarMonth) > 0) ? (solarMonth - 1) : 11;
+        e2c(solarYear, solarMonth, solarDay);
+        return GetcDateStringDate();
+    }
+}
+
 var D = new Date();
 var yy = D.getFullYear();
 var mm = D.getMonth() + 1;
@@ -100,11 +120,13 @@ var dd = D.getDate();
 var ww = D.getDay();
 var ss = parseInt(D.getTime() / 1000);
 if (yy < 100) yy = "19" + yy;
-function showCal() {
-    document.getElementById('lunar').innerHTML = GetLunarDay(yy, mm, dd);
-}
-showCal();
 
+// document.getElementById('lunar').innerHTML = GetLunarDay(yy, mm, dd);
+
+var _lunar = GetLunarDayYear(yy, mm, dd);
+var _lunarDate = GetLunarDayDate(yy, mm, dd);
+
+console.log(_lunar, _lunarDate)
 
 document.getElementById('gregorian').addEventListener('mouseup', function (e) {
     var msg = prompt('记录一下今天的事情');
@@ -133,3 +155,117 @@ document.getElementById('btn-history').addEventListener('click', function () {
         alert('并没有什么记录.')
     }
 })
+
+
+// -----------
+
+
+document.body.onload = function () {
+    var clock = document.querySelector('#clock');
+    var cxt = clock.getContext('2d')
+    var width = clock.width = 200;
+    var height = clock.height = 200;
+    var r = width / 2;
+    function render() {
+        // canvas.save()保存当前的画布状态到栈里，canvas.restore()取出堆栈里保存的的状态，属于先进后出，
+        // 所以canvas.restore()取的是最近的一次保存。
+        cxt.clearRect(0, 0, width, height);
+        cxt.save();
+        cxt.translate(width / 2, height / 2); // 重置坐标系
+        // 画轮廓
+        cxt.beginPath();
+        cxt.lineWidth = r * 0.05;//轮廓圆宽度
+        cxt.strokeStyle = "#333";//轮廓圆颜色
+        cxt.arc(0, 0, r - r * 0.05, 10 * Math.PI / 6, 4 * Math.PI / 6); //圆
+        cxt.stroke();
+        cxt.closePath();
+        // 画内圆
+        cxt.beginPath();
+        cxt.lineWidth = r * 0.05;
+        var radi2 = r * 0.85; //半径
+        var radi3 = r * 0.55;
+        cxt.arc(0, 0, radi3, 5 * Math.PI / 6, 1.5 * Math.PI); //圆
+        cxt.stroke();
+        cxt.closePath();
+        // 画刻度 使用Math.sin(deg)、Math.cos(deg)来计算圆上点的坐标
+        // 每隔6度画一个点
+        var hour = [18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 19], i = 0;
+        for (var deg = 0; deg < 360; deg = deg + 6) {
+            var spotX = radi2 * Math.sin(deg * 2 * Math.PI / 360);
+            var spotY = radi2 * Math.cos(deg * 2 * Math.PI / 360);
+            var spot = r * 0.02; //刻度半径
+            cxt.beginPath();
+            cxt.fillStyle = "#ccc";
+            if (deg % 30 == 0) {
+                cxt.fillStyle = "#333";
+                spot = r * 0.025;
+                var textX = (radi2 * 0.85) * Math.sin(deg * 2 * Math.PI / 360); //文字x坐标
+                var textY = (radi2 * 0.85) * Math.cos(deg * 2 * Math.PI / 360); //文字y坐标
+                cxt.font = r * 0.1 + "px Arial";
+                cxt.textBaseline = "middle";// 文字垂直对齐方式
+                cxt.textAlign = "center";   // 文字水平对齐方式
+                cxt.fillText(hour[i], textX, textY);
+                i++;
+            }
+            cxt.arc(spotX, spotY, spot, 0, 2 * Math.PI);
+            cxt.fill();
+            cxt.closePath();
+        }
+
+        // 写入内容
+        cxt.beginPath();
+        cxt.fillStyle = "#000";
+        cxt.font = r * 0.15 + "px Arial";
+        cxt.textBaseline = "middle";// 文字垂直对齐方式
+        cxt.textAlign = "center";   // 文字水平对齐方式
+        cxt.fillText(_lunar, 0, r * -0.2)
+        cxt.fillText(_lunarDate, 0, r * 0)
+        cxt.fillText(_week, 0, r * 0.2)
+        cxt.fill();
+        cxt.closePath();
+    }
+    function drawGuid() {
+        var now = new Date();
+        h = now.getHours();
+        m = now.getMinutes();
+        s = now.getSeconds();
+        drawHour(h, m);
+        drawMinute(m, s);
+    }
+    function drawHour(h, m) {
+        // 时针
+        h = h + m / 60;
+        cxt.save();
+        cxt.beginPath();
+        cxt.rotate(2 * Math.PI / 12 * h);
+        cxt.lineWidth = r * 0.05;
+        cxt.lineCap = "round";
+        cxt.moveTo(0, -r * 0.5);
+        cxt.lineTo(0, -r * 0.6);
+        cxt.stroke();
+        cxt.closePath();
+        cxt.restore();
+    }
+    function drawMinute(m, s) {
+        // 分针
+        m = m + s / 60;
+        cxt.save();
+        cxt.beginPath();
+        cxt.rotate(2 * Math.PI / 60 * m);
+        cxt.lineWidth = 3;
+        cxt.lineCap = "round";
+        cxt.moveTo(0, -r * 0.5);
+        cxt.lineTo(0, -r * 0.6);
+        cxt.stroke();
+        cxt.closePath();
+        cxt.restore();
+    }
+    render();
+    drawGuid();
+    cxt.restore();
+    // setInterval(function () {
+    //     render();
+    //     drawGuid();
+    //     cxt.restore();
+    // }, 30 / 1000)
+}
